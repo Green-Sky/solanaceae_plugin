@@ -26,7 +26,7 @@
 
 void* Plugin::loadSymbol(const char* s_name) {
 #if defined(_WIN32) || defined(_WIN64)
-	return GetProcAddress(_dl, s_name);
+	return reinterpret_cast<void*>(GetProcAddress(static_cast<HMODULE>(_dl), s_name));
 #else
 	return dlsym(_dl, s_name);
 #endif
@@ -35,9 +35,9 @@ void* Plugin::loadSymbol(const char* s_name) {
 // loads lib and gets name (and version)
 Plugin::Plugin(const char* path) {
 #if defined(_WIN32) || defined(_WIN64)
-	_dl = (void*)LoadLibraryA(path);
+	_dl = static_cast<void*>(LoadLibraryA(path));
 #else
-	_dl = (void*)dlopen(path, RTLD_NOW /*| RTLD_LOCAL*/);
+	_dl = static_cast<void*>(dlopen(path, RTLD_NOW /*| RTLD_LOCAL*/));
 #endif
 
 	if (!_dl) {
@@ -97,7 +97,7 @@ Plugin::Plugin(Plugin&& other) {
 Plugin::~Plugin(void) {
 	if (_dl != nullptr) {
 #if defined(_WIN32) || defined(_WIN64)
-		FreeLibrary(_dl);
+		FreeLibrary(static_cast<HMODULE>(_dl));
 #else
 		dlclose(_dl);
 #endif
