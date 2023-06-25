@@ -41,7 +41,17 @@ Plugin::Plugin(const char* path) {
 #endif
 
 	if (!_dl) {
-		std::cerr << "PLG opening '" << path << "' failed\n";
+		std::cerr << "PLG opening '" << path << "' failed";
+#if defined(_WIN32) || defined(_WIN64)
+		// TODO: windows error reporting
+		std::cerr << ": " << GetLastError() << ";
+#else
+		const auto* error = dlerror();
+		if (error != nullptr) {
+			std::cerr << ": '" << error << "'";
+		}
+#endif
+		std::cerr << "\n";
 		return;
 	}
 
