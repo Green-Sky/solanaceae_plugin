@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define SOLANA_PLUGIN_VERSION 5
+#define SOLANA_PLUGIN_VERSION 6
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 	#define SOLANA_PLUGIN_EXPORT __declspec(dllexport)
