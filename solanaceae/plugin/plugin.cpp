@@ -105,6 +105,9 @@ Plugin::Plugin(Plugin&& other) {
 
 	_fn_tick = other._fn_tick;
 	other._fn_tick = nullptr;
+
+	_fn_render = other._fn_render;
+	other._fn_render = nullptr;
 }
 
 // unloads the plugin
