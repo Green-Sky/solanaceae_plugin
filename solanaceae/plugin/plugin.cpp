@@ -140,7 +140,7 @@ float Plugin::tick(float delta) const {
 float Plugin::render(float delta) const {
 	assert(valid_plugin);
 	if (_fn_render != nullptr) {
-		return reinterpret_cast<decltype(&solana_plugin_tick)>(_fn_tick)(delta);
+		return reinterpret_cast<decltype(&solana_plugin_render)>(_fn_render)(delta);
 	} else {
 		return std::numeric_limits<float>::max();
 	}
