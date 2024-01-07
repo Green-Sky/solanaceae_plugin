@@ -39,6 +39,8 @@ struct PluginManager {
 
 	bool add(const std::string& plug_path);
 
-	void tick(float delta);
+	// returns the minimum time until next call is wanted in seconds
+	float tick(float delta);
+	float render(float delta);
 };
 

@@ -21,6 +21,7 @@
 	#define LINUX
 #endif
 
+#include <limits>
 #include <iostream>
 #include <cassert>
 
@@ -60,6 +61,7 @@ Plugin::Plugin(const char* path) {
 	_fn_start = loadSymbol("solana_plugin_start");
 	_fn_stop = loadSymbol("solana_plugin_stop");
 	_fn_tick = loadSymbol("solana_plugin_tick");
+	_fn_render = loadSymbol("solana_plugin_render"); // optional
 
 	if (!_fn_name || !_fn_version || !_fn_start || !_fn_stop || !_fn_tick) {
 		std::cerr << "PLG '" << path << "' misses functions\n";
@@ -127,8 +129,18 @@ void Plugin::stop(void) const {
 }
 
 // tick function
-void Plugin::tick(float delta) const {
+float Plugin::tick(float delta) const {
 	assert(valid_plugin);
-	reinterpret_cast<decltype(&solana_plugin_tick)>(_fn_tick)(delta);
+	return reinterpret_cast<decltype(&solana_plugin_tick)>(_fn_tick)(delta);
+}
+
+// render function
+float Plugin::render(float delta) const {
+	assert(valid_plugin);
+	if (_fn_render != nullptr) {
+		return reinterpret_cast<decltype(&solana_plugin_tick)>(_fn_tick)(delta);
+	} else {
+		return std::numeric_limits<float>::max();
+	}
 }
 

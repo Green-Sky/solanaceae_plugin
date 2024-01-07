@@ -1,5 +1,7 @@
 #include "./plugin_manager.hpp"
 
+#include <limits>
+
 #include <iostream>
 
 // def
@@ -45,9 +47,29 @@ bool PluginManager::add(const std::string& plug_path) {
 	return true;
 }
 
-void PluginManager::tick(float delta) {
+float PluginManager::tick(float delta) {
+	float min_interval {std::numeric_limits<float>::max()};
+
 	for (const auto& p : _plugins) {
-		p.tick(delta);
+		const float plug_interval = p.tick(delta);
+		if (plug_interval < min_interval) {
+			min_interval = plug_interval;
+		}
 	}
+
+	return min_interval;
+}
+
+float PluginManager::render(float delta) {
+	float min_interval {std::numeric_limits<float>::max()};
+
+	for (const auto& p : _plugins) {
+		const float plug_interval = p.render(delta);
+		if (plug_interval < min_interval) {
+			min_interval = plug_interval;
+		}
+	}
+
+	return min_interval;
 }
 

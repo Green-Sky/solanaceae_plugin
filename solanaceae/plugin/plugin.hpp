@@ -19,6 +19,7 @@ struct Plugin {
 	void* _fn_start = nullptr;
 	void* _fn_stop = nullptr;
 	void* _fn_tick = nullptr;
+	void* _fn_render = nullptr;
 
 	void* loadSymbol(const char* name);
 
@@ -37,8 +38,9 @@ struct Plugin {
 	// stop function
 	void stop(void) const;
 
-	// tick function
-	void tick(float delta) const;
+	// update functions
+	float tick(float delta) const;
+	float render(float delta) const;
 
 	operator bool(void) const {
 		return valid_plugin;
