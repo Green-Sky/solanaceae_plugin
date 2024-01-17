@@ -5,22 +5,23 @@
 #include <iostream>
 
 // def
-std::map<std::string, void*> g_instance_map {};
+std::map<std::string, std::map<std::string, void*>> g_instance_map {};
 
 extern "C" {
 
-void* g_resolveInstance__internal(const char* id) {
+void* g_resolveInstance__internal(const char* id, const char* version) {
 	if (auto it = g_instance_map.find(id); it != g_instance_map.end()) {
-		return it->second;
+		if (auto it_v = it->second.find(version); it_v != it->second.end()) {
+			return it_v->second;
+		}
 	}
 	return nullptr;
 }
 
-void g_provideInstance__internal(const char* id, const char* plugin_name, void* instance) {
-	g_instance_map[id] = instance;
-	std::cout << "PLM '" << plugin_name << "' provided '" << id << "'\n";
+void g_provideInstance__internal(const char* id, const char* version, const char* plugin_name, void* instance) {
+	g_instance_map[id][version] = instance;
+	std::cout << "PLM: '" << plugin_name << "' provided '" << id << "' version '" << version << "'\n";
 }
-
 
 } // extern C
 

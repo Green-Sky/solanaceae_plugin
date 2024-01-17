@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define SOLANA_PLUGIN_VERSION 8
+#define SOLANA_PLUGIN_VERSION 9
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 	#define SOLANA_PLUGIN_EXPORT __declspec(dllexport)
@@ -27,10 +27,9 @@ extern "C" {
 // public plugin stuff here
 
 struct SolanaAPI {
-	void* (*resolveInstance)(const char* id);
-
+	void* (*resolveInstance)(const char* id, const char* version);
 	// resolve_all_instances(const char* id)
-	void (*provideInstance)(const char* id, const char* plugin_name, void* instance);
+	void (*provideInstance)(const char* id, const char* version, const char* plugin_name, void* instance);
 };
 
 // ---------- info ----------
