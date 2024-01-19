@@ -81,8 +81,8 @@ static void plug_provideInstance(const SolanaAPI* solana_api, const char* id, co
 	plug_provideInstance<T>(solana_api, id, internal::g_type_version<T>::version, plugin_name, instance);
 }
 
-#define PLUG_PROVIDE_INSTANCE_VERSIONED(x, ver, p, i) plug_provideInstance(solana_api, #x, ver, p, i)
-#define PLUG_PROVIDE_INSTANCE(x, p, i) plug_provideInstance(solana_api, #x, p, i)
+#define PLUG_PROVIDE_INSTANCE_VERSIONED(x, ver, p, i) plug_provideInstance<x>(solana_api, #x, ver, p, i)
+#define PLUG_PROVIDE_INSTANCE(x, p, i) plug_provideInstance<x>(solana_api, #x, p, i)
 
 // ---------- resolve optional ----------
 
