@@ -54,6 +54,7 @@ float PluginManager::tick(float delta) {
 	for (const auto& p : _plugins) {
 		const float plug_interval = p.tick(delta);
 		if (plug_interval < min_interval) {
+			//std::cout << "new plug min " << plug_interval << " by " << p.name << "\n";
 			min_interval = plug_interval;
 		}
 	}
