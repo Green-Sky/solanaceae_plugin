@@ -87,12 +87,16 @@ static void plug_provideInstance(const SolanaAPI* solana_api, const char* id, co
 // ---------- resolve optional ----------
 
 template<typename T>
-static T* plug_resolveInstanceOptional(const SolanaAPI* solana_api, const char* id, const char* version) {
-	return static_cast<T*>(solana_api->resolveInstance(id, version));
+static auto plug_resolveInstanceOptional(const SolanaAPI* solana_api, const char* id, const char* version) {
+	if constexpr (internal::is_pointer<T>::value) {
+		return reinterpret_cast<T>(solana_api->resolveInstance(id, version));
+	} else {
+		return static_cast<T*>(solana_api->resolveInstance(id, version));
+	}
 }
 
 template<typename T>
-static T* plug_resolveInstanceOptional(const SolanaAPI* solana_api, const char* id) {
+static auto plug_resolveInstanceOptional(const SolanaAPI* solana_api, const char* id) {
 	return plug_resolveInstanceOptional<T>(solana_api, id, internal::g_type_version<T>::version);
 }
 
@@ -104,15 +108,15 @@ struct ResolveException {
 };
 
 template<typename T>
-static T* plug_resolveInstance(const SolanaAPI* solana_api, const char* id, const char* version) {
-	T* res = plug_resolveInstanceOptional<T>(solana_api, id, version);
+static auto plug_resolveInstance(const SolanaAPI* solana_api, const char* id, const char* version) {
+	auto res = plug_resolveInstanceOptional<T>(solana_api, id, version);
 	if (res == nullptr) {
 		throw ResolveException{"missing " + std::string{id} + " " + version};
 	}
 	return res;
 }
 template<typename T>
-static T* plug_resolveInstance(const SolanaAPI* solana_api, const char* id) {
+static auto plug_resolveInstance(const SolanaAPI* solana_api, const char* id) {
 	return plug_resolveInstance<T>(solana_api, id, internal::g_type_version<T>::version);
 }
 
