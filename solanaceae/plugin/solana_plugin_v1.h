@@ -111,7 +111,7 @@ template<typename T>
 static auto plug_resolveInstance(const SolanaAPI* solana_api, const char* id, const char* version) {
 	auto res = plug_resolveInstanceOptional<T>(solana_api, id, version);
 	if (res == nullptr) {
-		throw ResolveException{"missing " + std::string{id} + " " + version};
+		throw ResolveException{"missing '" + std::string{id} + "' version '" + version + "'"};
 	}
 	return res;
 }
